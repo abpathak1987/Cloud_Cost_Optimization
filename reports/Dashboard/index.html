@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Cost Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            background-color: #f4f4f4;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        section {
+            margin-bottom: 2rem;
+        }
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Cloud Cost Dashboard</h1>
+        <p>Last updated: <span id="timestamp"></span></p>
+    </header>
+
+    <main>
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>Total Cost: $<span id="total-cost"></span></p>
+            <p>Anomalies Detected: <span id="anomalies-count"></span></p>
+        </section>
+
+        <section id="alerts">
+            <h2>High Severity Alerts</h2>
+            <ul id="high-alerts"></ul>
+        </section>
+
+        <section id="recommendations">
+            <h2>Optimization Recommendations</h2>
+            <p>Potential Savings: $<span id="potential-savings"></span></p>
+            <ul id="top-recommendations"></ul>
+        </section>
+    </main>
+
+    <script>
+        const dashboardData = {
+            "TIMESTAMP": "2024-12-03 12:32:47.179114",
+            "MONITORING": {
+                "total_cost": 13086.38,
+                "anomalies": 51,
+                "alerts": [
+                    {
+                        "type": "cost_threshold",
+                        "service": "Cloud SQL",
+                        "message": "Cost threshold exceeded for Cloud SQL: $2,287.08",
+                        "severity": "high"
+                    },
+                    {
+                        "type": "cost_threshold",
+                        "service": "Cloud Storage",
+                        "message": "Cost threshold exceeded for Cloud Storage: $2,143.16",
+                        "severity": "high"
+                    },
+                    {
+                        "type": "cost_threshold",
+                        "service": "Compute Engine",
+                        "message": "Cost threshold exceeded for Compute Engine: $2,112.95",
+                        "severity": "high"
+                    }
+                ]
+            },
+            "OPTIMIZATION": {
+                "recommendations_count": 3,
+                "potential_savings": 800.32,
+                "top_recommendations": [
+                    {
+                        "type": "usage_optimization",
+                        "service": "Cloud SQL",
+                        "message": "Low usage detected during hours: [0]",
+                        "potential_savings": "$208.37",
+                        "action": "schedule_scaling",
+                        "parameters": {
+                            "hours": [0],
+                            "scale_factor": 0.5
+                        }
+                    },
+                    {
+                        "type": "usage_optimization",
+                        "service": "Cloud Storage",
+                        "message": "Low usage detected during hours: [0]",
+                        "potential_savings": "$280.68",
+                        "action": "schedule_scaling",
+                        "parameters": {
+                            "hours": [0],
+                            "scale_factor": 0.5
+                        }
+                    },
+                    {
+                        "type": "usage_optimization",
+                        "service": "Compute Engine",
+                        "message": "Low usage detected during hours: [0]",
+                        "potential_savings": "$311.27",
+                        "action": "schedule_scaling",
+                        "parameters": {
+                            "hours": [0],
+                            "scale_factor": 0.5
+                        }
+                    }
+                ]
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateDashboard(dashboardData);
+        });
+
+        function populateDashboard(data) {
+            document.getElementById('timestamp').textContent = data.TIMESTAMP;
+            document.getElementById('total-cost').textContent = data.MONITORING.total_cost.toFixed(2);
+            document.getElementById('anomalies-count').textContent = data.MONITORING.anomalies;
+            
+            const highAlerts = data.MONITORING.alerts.filter(alert => alert.severity === 'high');
+            const highAlertsList = document.getElementById('high-alerts');
+            highAlerts.forEach(alert => {
+                const li = document.createElement('li');
+                li.textContent = `${alert.service}: ${alert.message}`;
+                highAlertsList.appendChild(li);
+            });
+
+            document.getElementById('potential-savings').textContent = data.OPTIMIZATION.potential_savings.toFixed(2);
+            const recommendationsList = document.getElementById('top-recommendations');
+            data.OPTIMIZATION.top_recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = `${rec.service}: ${rec.message} (Potential savings: ${rec.potential_savings})`;
+                recommendationsList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>

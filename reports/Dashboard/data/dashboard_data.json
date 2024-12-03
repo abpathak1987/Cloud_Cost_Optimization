@@ -1,0 +1,66 @@
+{
+  "TIMESTAMP": "2024-12-03 12:32:47.179114",
+  "MONITORING": {
+    "total_cost": 13086.38,
+    "anomalies": 51,
+    "alerts": [
+      {
+        "type": "cost_threshold",
+        "service": "Cloud SQL",
+        "message": "Cost threshold exceeded for Cloud SQL: $2,287.08",
+        "severity": "high"
+      },
+      {
+        "type": "cost_threshold",
+        "service": "Cloud Storage",
+        "message": "Cost threshold exceeded for Cloud Storage: $2,143.16",
+        "severity": "high"
+      },
+      {
+        "type": "cost_threshold",
+        "service": "Compute Engine",
+        "message": "Cost threshold exceeded for Compute Engine: $2,112.95",
+        "severity": "high"
+      }
+    ]
+  },
+  "OPTIMIZATION": {
+    "recommendations_count": 3,
+    "potential_savings": 800.32,
+    "top_recommendations": [
+      {
+        "type": "usage_optimization",
+        "service": "Cloud SQL",
+        "message": "Low usage detected during hours: [0]",
+        "potential_savings": "$208.37",
+        "action": "schedule_scaling",
+        "parameters": {
+          "hours": [0],
+          "scale_factor": 0.5
+        }
+      },
+      {
+        "type": "usage_optimization",
+        "service": "Cloud Storage",
+        "message": "Low usage detected during hours: [0]",
+        "potential_savings": "$280.68",
+        "action": "schedule_scaling",
+        "parameters": {
+          "hours": [0],
+          "scale_factor": 0.5
+        }
+      },
+      {
+        "type": "usage_optimization",
+        "service": "Compute Engine",
+        "message": "Low usage detected during hours: [0]",
+        "potential_savings": "$311.27",
+        "action": "schedule_scaling",
+        "parameters": {
+          "hours": [0],
+          "scale_factor": 0.5
+        }
+      }
+    ]
+  }
+}
