@@ -8,6 +8,53 @@ class CostVisualizer:
     def __init__(self):
         plt.style.use('classic')
         self.colors = ['#2ecc71', '#3498db', '#9b59b6', '#e74c3c', '#34495e', '#f1c40f']
+        
+    def plot_optimization_potential(self, cost_table: pd.DataFrame, recommendations: list):
+        """Create a visualization of potential cost savings with numbers on the bars"""
+        fig, ax = plt.subplots(figsize=(12, 7))
+        
+        services = []
+        current_costs = []
+        potential_savings = []
+        
+        for rec in recommendations:
+            service = rec['service']
+            current_cost = cost_table[cost_table['Service description'] == service]['Cost ($)'].sum()
+            saving_pct = float(rec['potential_savings'].rstrip('%')) / 100
+            
+            services.append(service)
+            current_costs.append(current_cost * (1 - saving_pct))
+            potential_savings.append(current_cost * saving_pct)
+        
+        x = range(len(services))
+        bars1 = ax.bar(x, current_costs, label='Projected Cost',
+               color='#2ecc71', alpha=0.6)
+        bars2 = ax.bar(x, potential_savings, bottom=current_costs,
+               label='Potential Savings', color='#e74c3c', alpha=0.6)
+        
+        ax.set_title('Cost Optimization Potential by Service',
+                     fontsize=14, fontweight='bold')
+        ax.set_xlabel('Service', fontsize=12)
+        ax.set_ylabel('Cost ($)', fontsize=12)
+        ax.set_xticks(x)
+        ax.set_xticklabels(services, rotation=45, ha='right')
+        
+        ax.legend(fontsize=10)
+        ax.grid(True, alpha=0.3)
+        
+        def add_labels(bars):
+            for bar in bars:
+                height = bar.get_height()
+                ax.text(bar.get_x() + bar.get_width()/2, bar.get_y() + height/2,
+                        f'${height:,.0f}',
+                        ha='center', va='center', fontsize=9, fontweight='bold',
+                        color='black')
+        
+        add_labels(bars1)
+        add_labels(bars2)
+        
+        plt.tight_layout()
+        return fig    
     
     def plot_service_costs(self, cost_table: pd.DataFrame, title="Cost Distribution by Service"):
         """Create a pie chart of costs by service"""
@@ -79,42 +126,8 @@ class CostVisualizer:
         
         ax.grid(True, alpha=0.3)
         plt.tight_layout()
-        return fig
-    
-    def plot_optimization_potential(self, cost_table: pd.DataFrame, recommendations: list):
-        """Create a visualization of potential cost savings"""
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        services = []
-        current_costs = []
-        potential_savings = []
-        
-        for rec in recommendations:
-            service = rec['service']
-            current_cost = cost_table[cost_table['Service description'] == service]['Cost ($)'].sum()
-            saving_pct = float(rec['potential_savings'].rstrip('%')) / 100
-            
-            services.append(service)
-            current_costs.append(current_cost * (1 - saving_pct))
-            potential_savings.append(current_cost * saving_pct)
-        
-        x = range(len(services))
-        ax.bar(x, current_costs, label='Projected Cost',
-               color='#2ecc71', alpha=0.6)
-        ax.bar(x, potential_savings, bottom=current_costs,
-               label='Potential Savings', color='#e74c3c', alpha=0.6)
-        
-        ax.set_title('Cost Optimization Potential by Service', 
-                    fontsize=12, fontweight='bold')
-        ax.set_xlabel('Service', fontsize=10)
-        ax.set_ylabel('Cost ($)', fontsize=10)
-        ax.set_xticks(x)
-        ax.set_xticklabels(services, rotation=45, ha='right')
-        
-        ax.legend()
-        ax.grid(True, alpha=0.3)
-        plt.tight_layout()
-        return fig
+        return fig    
+
     
     def plot_usage_patterns(self, cost_table: pd.DataFrame):
         """Create a heatmap of usage patterns"""
